@@ -1,8 +1,12 @@
 import json
 import logging
-
 from fastapi import Request
+from aiogram.types import TelegramObject
+from typing import Callable, Awaitable, Any
+from aiogram import BaseMiddleware as AiogramMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from services.auth import get_access_token
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
@@ -32,3 +36,18 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         # Log response details
         self.logger.debug(f"Response status code: {response.status_code}")
         return response
+
+
+# Aiogram middleware for adding JWT token to events
+class JWTMiddleware(AiogramMiddleware):
+    async def __call__(
+        self,
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[Any]],
+        event: TelegramObject,
+        data: dict[str, Any],
+    ) -> Any:
+        if event:
+            user = event.from_user
+            access_token = await get_access_token(user)
+            data["access_token"] = access_token  # Inject token into handler data
+        return await handler(event, data)

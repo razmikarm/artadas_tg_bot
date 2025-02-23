@@ -7,6 +7,7 @@ from services.ngrok import get_ngrok_url
 class Settings(BaseSettings):
     DEBUG: bool = False
 
+    REDIS_URL: str
     AUTH_API_URL: str
     BASE_API_URL: str
     INTERNAL_API_KEY: str

@@ -9,7 +9,7 @@ router = Router()
 
 
 @router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
+async def command_start_handler(message: Message, access_token: str) -> None:
     """
     This handler receives messages with `/start` command
     """
@@ -22,15 +22,13 @@ async def command_start_handler(message: Message) -> None:
 
 
 @router.message(Command("help"))
-async def help_handler(message: Message):
+async def help_handler(message: Message, access_token: str):
     await message.answer("This bot responds to /start and /help commands.")
 
 
 @router.message(Command("whoami"))
-async def whoami_handler(message: Message):
+async def whoami_handler(message: Message, access_token: str):
     user = message.from_user
-
-    jwt_token = getattr(message, "auth_jwt_token", {})
 
     data = dict(
         first_name=user.first_name,
@@ -39,14 +37,14 @@ async def whoami_handler(message: Message):
         id=user.id,
         is_bot=user.is_bot,
         language_code=user.language_code,
-        jwt_token=jwt_token,
+        jwt_token=access_token,
     )
 
     await message.answer(json.dumps(data, indent=2))
 
 
 @router.message()
-async def echo_handler(message: Message) -> None:
+async def echo_handler(message: Message, access_token: str) -> None:
     """
     Handler will forward receive a message back to the sender
 
