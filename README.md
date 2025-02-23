@@ -67,7 +67,6 @@ Telegram Bot service for Artadas project
 3. **Optional:** Leave `WEBHOOK_URL` empty in `.env` file to set it automatically from `ngrok` service
 
 4. Build your containers:
-   > Comment `backend` network for `tg_bot` service in `docker-compose.yml` file
    ```bash
    docker compose build
    ```
@@ -77,7 +76,7 @@ Telegram Bot service for Artadas project
    docker compose up
    ```
 
-6. **Additional:** Inspect requests through ngrok web interface [http://localhost:4040](http://localhost:4040)
+6. **Additional:** Inspect requests through ngrok web interface at [http://localhost:4040](http://localhost:4040)
 
 > The project will be mounted in container, so that container will be up-to-date and will reload on new changes
 
