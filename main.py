@@ -45,4 +45,4 @@ async def telegram_webhook(update: dict):
 
 dp.message.middleware(JWTMiddleware())
 app.add_middleware(LoggingMiddleware, debug=settings.DEBUG)
-app.include_router(tma_router, prefix="/tma")
+app.include_router(tma_router)

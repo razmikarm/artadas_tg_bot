@@ -13,11 +13,16 @@ async def tma_proxy_router(full_path: str, request: Request):
         response = await client.request(
             method=request.method,
             url=f"{settings.MINI_APP_URL}/{full_path}",
-            headers=request.headers.raw,
+            headers={k: v for k, v in request.headers.items() if k.lower() != "host"},
             content=await request.body(),
         )
+
+        # Remove content-encoding to prevent FastAPI from trying to decompress
+        headers = dict(response.headers)
+        headers.pop("content-encoding", None)
+
         return StreamingResponse(
-            response.aiter_raw(),
+            response.aiter_bytes(),
             status_code=response.status_code,
-            headers=dict(response.headers),
+            headers=headers,
         )
