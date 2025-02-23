@@ -29,18 +29,6 @@ services:
     networks:
       - app-network
 
-  ngrok:
-    image: wernight/ngrok
-    container_name: bot-ngrok
-    ports:
-      - "4040:4040"  # For ngrok web interface
-    env_file:
-      - .env
-    command: ["ngrok", "http", "bot:8000"]
-    networks:
-      - app-network
-
-
 networks:
   app-network:
     driver: bridge
