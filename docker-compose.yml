@@ -1,8 +1,8 @@
 services:
 
-  tg_bot:
+  bot:
     build: .
-    container_name: tg_bot
+    container_name: bot
     env_file:
       - .env
     ports:
@@ -10,20 +10,37 @@ services:
     volumes:
       - .:/app
     networks:
-      - ngrok
+      - app-network
+
+  tma:
+    build:
+      context: ./tma
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./tma/.env.local
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
 
   ngrok:
     image: wernight/ngrok
-    container_name: ngrok
+    container_name: bot-ngrok
     ports:
       - "4040:4040"  # For ngrok web interface
     env_file:
       - .env
-    command: ["ngrok", "http", "tg_bot:8000"]
+    command: ["ngrok", "http", "bot:8000"]
     networks:
-      - ngrok
+      - app-network
 
 
 networks:
-  ngrok:
+  app-network:
     driver: bridge

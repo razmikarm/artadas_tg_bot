@@ -6,6 +6,7 @@ from aiogram import Dispatcher, Bot, types
 from app.config import settings
 from app.handlers import router
 from app.middleware import LoggingMiddleware, JWTMiddleware
+from services.tma import router as tma_router
 
 
 log = logging.getLogger("uvicorn")
@@ -44,3 +45,4 @@ async def telegram_webhook(update: dict):
 
 dp.message.middleware(JWTMiddleware())
 app.add_middleware(LoggingMiddleware, debug=settings.DEBUG)
+app.include_router(tma_router, prefix="/tma")
